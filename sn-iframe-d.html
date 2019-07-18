@@ -122,7 +122,7 @@
 
   function buttonClickHandler(evt) {
     // resultUrl = `${baseUrlEl.value}/${docIdEl.value}?access_token=${snTokenEl.value}`;
-    resultUrl = `${baseUrlEl.value}=${docIdEl.value}?access_token=${snTokenEl.value}`;
+    resultUrl = `${baseUrlEl.value}=${docIdEl.value}&access_token=${snTokenEl.value}`;
     snIframe.src = resultUrl;
 
     if (extraParamsEl.value) {
