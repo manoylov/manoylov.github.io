@@ -123,7 +123,6 @@
   function buttonClickHandler(evt) {
     // resultUrl = `${baseUrlEl.value}/${docIdEl.value}?access_token=${snTokenEl.value}`;
     resultUrl = `${baseUrlEl.value}=${docIdEl.value}&access_token=${snTokenEl.value}`;
-    snIframe.src = resultUrl;
 
     if (extraParamsEl.value) {
       saveToLocalStorage(localStorageKeys.extra_params, extraParamsEl.value);
@@ -131,6 +130,7 @@
     }
 
     resUrllEl.value = resultUrl;
+    snIframe.src = resultUrl;
 
     saveToLocalStorage(localStorageKeys.base_url, baseUrlEl.value);
     saveToLocalStorage(localStorageKeys.doc_id, docIdEl.value);
