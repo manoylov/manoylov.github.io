@@ -9,8 +9,9 @@
   <style>
     .sn-from {
       display: inline-block;
-      width: 500px;
+      width: 900px;
       margin: 15px;
+      max-width: 100%;
     }
 
     .btn {
@@ -55,21 +56,16 @@
 <div id="form-test" class="sn-from">
   <div class="form-group">
     <label for="base-url">Base Url</label>
-    <input type="text" class="form-control" id="base-url" value="https://app.signnow.com/webapp/document" required readonly>
+    <!--<input type="text" class="form-control" id="base-url" value="https://app.signnow.com/webapp/document" required readonly>-->
+    <input type="text" class="form-control" id="base-url" value="https://signnow.com/dispatch?route=fieldinvite&skip_mobile_choice=true&document_id" required>
   </div>
   <div class="form-group">
     <label for="doc-id">Document Id</label>
     <input type="text" class="form-control" id="doc-id" required>
   </div>
   <div class="form-group">
-    <div class="form-row">
-      <div class="col">
-        <input id="custom-param-name" type="text" class="form-control" placeholder="custom param name" value="snfiller">
-      </div>
-      <div class="col">
-        <input id="custom-param-value" type="text" class="form-control" placeholder="custom param value" value="snfiller6">
-      </div>
-    </div>
+    <label for="doc-id">Additional Params</label>
+    <input id="extra-params" type="text" class="form-control" value="snfiller=snfiller6">
   </div>
   <div class="form-group">
     <label for="sn-token">SignNow Token</label>
@@ -79,7 +75,7 @@
   <hr>
   <div class="form-group">
     <label for="result-url">Result URL</label>
-    <input type="text" class="form-control" id="result-url" value="https://app.signnow.com/webapp/document" readonly>
+    <input type="text" class="form-control" id="result-url" value="" readonly>
   </div>
 
 
@@ -99,14 +95,13 @@
 
   let baseUrlEl = document.getElementById('base-url');
   let docIdEl   = document.getElementById('doc-id');
-  let customParamName   = document.getElementById('custom-param-name');
-  let customParamValue   = document.getElementById('custom-param-value');
+  let extraParamsEl   = document.getElementById('extra-params');
   let snTokenEl = document.getElementById('sn-token');
 
   const isLocalStorageAvailable = isStorageAvailable('localStorage');
 
   const localStorageKeys = {
-    doc_id: 'doc_id', sn_token: 'sn_token', custom_param_name: 'custom_param_name', custom_param_value: 'custom_param_value'
+    doc_id: 'doc_id', sn_token: 'sn_token', base_url: 'base_url', extra_params: 'extra_params'
   };
 
   let resultUrl = '';
@@ -119,22 +114,25 @@
 
     docIdEl.value = getFromLocalStorage(localStorageKeys.doc_id);
     snTokenEl.value = getFromLocalStorage(localStorageKeys.sn_token);
-    customParamName.value = getFromLocalStorage(localStorageKeys.custom_param_name);
-    customParamValue.value = getFromLocalStorage(localStorageKeys.custom_param_value);
+    baseUrlEl.value = getFromLocalStorage(localStorageKeys.base_url) || baseUrlEl.value;
+    extraParamsEl.value = getFromLocalStorage(localStorageKeys.extra_params);
+
+    resUrllEl.value = baseUrlEl.value;
   }
 
   function buttonClickHandler(evt) {
-    resultUrl = `${baseUrlEl.value}/${docIdEl.value}?access_token=${snTokenEl.value}`;
+    // resultUrl = `${baseUrlEl.value}/${docIdEl.value}?access_token=${snTokenEl.value}`;
+    resultUrl = `${baseUrlEl.value}=${docIdEl.value}?access_token=${snTokenEl.value}`;
     snIframe.src = resultUrl;
 
-    if (customParamName.value) {
-      saveToLocalStorage(localStorageKeys.custom_param_name, customParamName.value);
-      saveToLocalStorage(localStorageKeys.custom_param_value, customParamValue.value);
-      resultUrl += `&${customParamName.value.trim()}=${customParamValue.value.trim()}`
+    if (extraParamsEl.value) {
+      saveToLocalStorage(localStorageKeys.extra_params, extraParamsEl.value);
+      resultUrl += `&${extraParamsEl.value.trim()}`
     }
 
     resUrllEl.value = resultUrl;
 
+    saveToLocalStorage(localStorageKeys.base_url, baseUrlEl.value);
     saveToLocalStorage(localStorageKeys.doc_id, docIdEl.value);
     saveToLocalStorage(localStorageKeys.sn_token, snTokenEl.value);
   }
