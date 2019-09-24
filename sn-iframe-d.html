@@ -110,7 +110,7 @@
   snBtnEl.addEventListener('click', buttonClickHandler);
 
   function setData() {
-    console.log('doc_id from local storage = ', getFromLocalStorage(localStorageKeys.doc_id));
+    // console.log('doc_id from local storage = ', getFromLocalStorage(localStorageKeys.doc_id));
 
     docIdEl.value = getFromLocalStorage(localStorageKeys.doc_id);
     snTokenEl.value = getFromLocalStorage(localStorageKeys.sn_token);
@@ -122,7 +122,17 @@
 
   function buttonClickHandler(evt) {
     // resultUrl = `${baseUrlEl.value}/${docIdEl.value}?access_token=${snTokenEl.value}`;
-    resultUrl = `${baseUrlEl.value}=${docIdEl.value}&access_token=${snTokenEl.value}`;
+
+    resultUrl = baseUrlEl.value;
+
+    if (!baseUrlEl.value.includes("document_id=") && docIdEl.value) {
+      resultUrl += `&document_id=${docIdEl.value}`;
+    }
+
+    if (!baseUrlEl.value.includes("access_token=") && snTokenEl.value) {
+      resultUrl += `&access_token=${snTokenEl.value}`;
+    }
+
 
     if (extraParamsEl.value) {
       saveToLocalStorage(localStorageKeys.extra_params, extraParamsEl.value);
