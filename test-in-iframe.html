@@ -74,6 +74,11 @@
   let baseUrlEl = document.getElementById('base-url');
 
   snBtnEl.addEventListener('click', () => snIframe.src = baseUrlEl.value);
+  baseUrlEl.addEventListener('keyup', (evt) => {
+    if (evt.key === 'Enter') {
+      snIframe.src = baseUrlEl.value;
+    }
+  });
 </script>
 
 </body>
